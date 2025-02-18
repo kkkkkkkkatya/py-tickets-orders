@@ -101,10 +101,8 @@ class TicketSerializer(serializers.ModelSerializer):
         seat = data.get("seat")
         # Ensure both values are present before validating
         if movie_session and row is not None and seat is not None:
-            Ticket.validate_row(row, movie_session.cinema_hall.rows,
-                                serializers.ValidationError)
-            Ticket.validate_seat(seat, movie_session.cinema_hall.seats_in_row,
-                                 serializers.ValidationError)
+            Ticket.validate_row(row, movie_session.cinema_hall.rows)
+            Ticket.validate_seat(seat, movie_session.cinema_hall.seats_in_row)
         return data
 
 

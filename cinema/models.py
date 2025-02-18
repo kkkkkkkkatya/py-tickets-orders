@@ -85,17 +85,17 @@ class Ticket(models.Model):
     seat = models.IntegerField()
 
     @staticmethod
-    def validate_row(row: int, num_rows: int, error_to_raise):
+    def validate_row(row: int, num_rows: int):
         if not (1 <= row <= num_rows):
-            raise error_to_raise({
+            raise ValidationError({
                 "row": f"Row number must be in range:"
                        f" [1, {num_rows}], not {row}"
             })
 
     @staticmethod
-    def validate_seat(seat: int, seats_in_row: int, error_to_raise):
+    def validate_seat(seat: int, seats_in_row: int):
         if not (1 <= seat <= seats_in_row):
-            raise error_to_raise({
+            raise ValidationError({
                 "seat": f"Seat number must be in range:"
                         f" [1, {seats_in_row}], not {seat}"
             })
@@ -104,14 +104,12 @@ class Ticket(models.Model):
         # Validate row using the cinema hall's number of rows
         Ticket.validate_row(
             self.row,
-            self.movie_session.cinema_hall.rows,
-            ValidationError
+            self.movie_session.cinema_hall.rows
         )
         # Validate seat using the cinema hall's seats per row
         Ticket.validate_seat(
             self.seat,
-            self.movie_session.cinema_hall.seats_in_row,
-            ValidationError
+            self.movie_session.cinema_hall.seats_in_row
         )
 
     def save(
